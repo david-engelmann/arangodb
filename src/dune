@@ -3,7 +3,7 @@
  (libraries async core)
  (preprocess (pps ppx_jane))
  ; single module
- ;(modules Sample)
+ (modules Auth)
 
  ; multiple modules
  ; (modules Sample Resample)

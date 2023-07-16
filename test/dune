@@ -3,7 +3,7 @@
  ; (names test_sample test_resample)
 
  ; single test file
- ;(names test_sample)
+ (names test_auth)
 
  (libraries async core ounit2 arangodb)
 
@@ -11,5 +11,5 @@
  ; (modules test_sample test_resample)
 
  ; single test file
- ;(modules test_sample)
+ (modules test_auth)
 )
