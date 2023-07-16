@@ -9,4 +9,10 @@ module Auth = struct
         token : string;
         refresh_token : string option;
       }
+
+    type basic_cred =
+      {
+        username : string;
+        password : string;
+      }
 end

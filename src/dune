@@ -2,9 +2,5 @@
  (name arangodb)
  (libraries async core)
  (preprocess (pps ppx_jane))
- ; single module
- (modules Auth)
-
- ; multiple modules
- ; (modules Sample Resample)
+ (modules Auth Config)
 )
