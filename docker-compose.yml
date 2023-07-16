@@ -150,7 +150,7 @@ services:
             args:
                 ARANGO_HOST: "${ARANGO_HOST:-localhost}"
                 ARANGO_PORT: "${ARANGO_PORT:-5001}"
-                ARANGO_USERNAME: "${ARANGO_USERNAME:-root}"
+                ARANGO_USER: "${ARANGO_USER:-root}"
                 ARANGO_PASSWORD: "${ARANGO_PASSWORD:-julyjackson}"
                 ARANGO_ROOT_PASSWORD: "${ARANGO_ROOT_PASSWORD:-julyjackson}"
 
