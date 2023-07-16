@@ -132,5 +132,5 @@ volumes:
   db3:
   _db3:
   db3_app:
-        
+  redis:
 
