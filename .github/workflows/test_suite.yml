@@ -46,7 +46,7 @@ jobs:
       #  uses: docker-practice/actions-setup-docker@v1
 
       - name: Docker Compose up
-        run: docker-compose -f docker-compose.yml up -d
+        run: docker compose -f docker-compose.yml up -d
 
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
