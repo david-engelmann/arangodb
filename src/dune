@@ -2,5 +2,5 @@
  (name arangodb)
  (libraries async core)
  (preprocess (pps ppx_jane))
- (modules Auth Config)
+ (modules Auth Config Request)
 )
