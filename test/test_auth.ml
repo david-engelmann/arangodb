@@ -1,6 +1,16 @@
 open OUnit2
 open Arangodb.Auth
 
+let sample_basic_cred_defaults : Auth.basic_cred = {
+   username = "root";
+   password = "";
+  }
+
+let sample_basic_cred : Auth.basic_cred = {
+   username = "arangodb";
+   password = "julyjackson";
+  }
+
 let sample_auth_without_jti : Auth.auth = {
     exp = 1686612561;
     iat = 1686611561;
@@ -20,6 +30,21 @@ let sample_auth_with_jti : Auth.auth = {
     token = "eyJCI6MTY4NzAyNjg0MCwiZXhwIjoxNjg3MDM0MDQwfQ.ZQem8wFw4HdYbbAnHpSvcwB3ue9HHK37K4QJ4QOzhKE";
     refresh_token = Some "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6ImNvbS5hdHByb3RvLnJlZnJlc2giLCJzdWIiOiJkaWQ6cGxjOnhvdjN1dnhmZDR0bzZldjNhazVnNXV4ayIsImp0aSI6InM0Z2JDcWRXRlVhQ1lJQk4xdk93V2xBS01LR3ZkSnlla1V3TjJKL1paUDQiLCJpYXQiOjE2ODcyODgzMjIsImV4cCI6MTY5NTA2NDMyMn0.2wdx89mPzrwVyFHhVOpHw6iIooFCE3k6a4qvvBNwcCE";
   }
+
+let test_sample_basic_cred_defaults _ =
+  match sample_basic_cred_defaults with
+   | { username; _ } ->
+      OUnit2.assert_equal "root" username
+
+let test_sample_basic_cred_username _ =
+  match sample_basic_cred with
+   | { username; _ } ->
+      OUnit2.assert_equal "arangodb" username
+
+let test_sample_basic_cred_password _ =
+  match sample_basic_cred with
+   | { password; _ } ->
+      OUnit2.assert_equal "julyjackson" password
 
 let test_sample_auth_with_jti_exp _ =
     match sample_auth_with_jti with
@@ -120,6 +145,9 @@ let suite =
          "test_sample_auth_without_jti_did" >:: test_sample_auth_without_jti_did;
          "test_sample_auth_without_jti_jti" >:: test_sample_auth_without_jti_jti;
          "test_sample_auth_without_jti_refresh_token" >:: test_sample_auth_without_jti_refresh_token;
+         "test_sample_basic_cred_defaults" >:: test_sample_basic_cred_defaults;
+         "test_sample_basic_cred_username" >:: test_sample_basic_cred_username;
+         "test_sample_basic_cred_password" >:: test_sample_basic_cred_password;
        ]
 
 let () = run_test_tt_main suite
