@@ -62,9 +62,13 @@ module Auth = struct
     let password = try Sys.getenv "ARANGO_PASSWORD" with Not_found -> "" in
     { username; password }
 
-  let port_from_env : int =
-    let port = try Sys.getenv "ARANGO_PORT" with Not_found -> 5001 in
-    port
+    let port_from_env : int =
+      try
+          let port_str = Sys.getenv "ARANGO_PORT" in
+          try 
+              int_of_string port_str
+          with Failure _ -> 5001
+      with Not_found -> 5001
 
   let hostname_from_env : string =
     let hostname = try Sys.getenv "ARANGO_URL" with Not_found -> "localhost" in
