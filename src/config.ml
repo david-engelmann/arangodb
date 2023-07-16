@@ -11,7 +11,7 @@ module Config = struct
       max_retries : int option;
       retry_on_confict : int option;
       agent : string;
-      agent_option : string;
-      headers : string;
+      agent_option : (string * string) list;
+      headers : (string * string) list;
     }
 end
