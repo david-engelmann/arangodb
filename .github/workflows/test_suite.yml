@@ -49,14 +49,33 @@ jobs:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
           opam-disable-sandboxing: true
 
+      - name: Cache opam dependencies
+        uses: actions/cache@v2
+        id: opam-cache
+        with:
+          path: ~/.opam
+          key: ${{ runner.os }}-opam-${{ hashFiles('**/*.opam') }}
+          restore-keys: |
+            ${{ runner.os }}-opam-
+
       - name: Install Common Libs
-        run: opam install async base core_kernel ounit qcheck dune ocamlformat
+        run: opam install async base uri cohttp cohttp-lwt-unix cohttp-async httpaf httpaf-lwt-unix lwt core_kernel ssl lwt_ssl jose ounit qcheck dune ocamlformat
 #      - name: Install Repo
 #        run: opam install . --deps-only --with-doc --with-test
       - name: Dune Build
         run: opam exec -- dune build
+        env:
+          ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
+          ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
+          ARANGO_USERNAME: ${{ secrets.ARANGO_USERNAME }}
+          ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
       - name: Dune Test
         run: opam exec -- dune runtest 2>&1 | tee dune_runtest.log
+        env:
+          ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
+          ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
+          ARANGO_USERNAME: ${{ secrets.ARANGO_USERNAME }}
+          ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
       - name: Upload Log
         uses: actions/upload-artifact@v2
         with:
