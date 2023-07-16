@@ -5,7 +5,7 @@
  ; single test file
  (names test_auth)
 
- (libraries async core ounit2 arangodb)
+ (libraries async core uri cohttp cohttp-lwt-unix cohttp-async httpaf httpaf-lwt-unix ssl jose lwt_ssl lwt ounit2 arangodb)
 
  ; multiple test files
  ; (modules test_sample test_resample)
