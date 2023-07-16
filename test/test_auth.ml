@@ -130,6 +130,11 @@ let test_sample_auth_without_jti_refresh_token _ =
        | _ ->
          OUnit2.assert_equal 1 1
 
+let test_create_auth_url _ =
+    let auth_url = Auth.get_hostname in
+    Printf.printf "Hostname: %s\n" auth_url;
+    OUnit2.assert_equal 0 1
+
 let suite =
   "suite"
   >::: [
@@ -148,6 +153,7 @@ let suite =
          "test_sample_basic_cred_defaults" >:: test_sample_basic_cred_defaults;
          "test_sample_basic_cred_username" >:: test_sample_basic_cred_username;
          "test_sample_basic_cred_password" >:: test_sample_basic_cred_password;
+         "test_create_auth_url" >:: test_create_auth_url;
        ]
 
 let () = run_test_tt_main suite
