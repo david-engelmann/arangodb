@@ -24,7 +24,7 @@ module Auth = struct
 
   let create_bearer_auth_header (auth : auth) : (string * string) =
     ("authorization", ("Bearer " ^ auth.token))
-  
+
   let make_auth_token_request (username : string) (password : string) (base_url : string) : string =
     let url = Printf.sprintf "%s/_open/auth" base_url in
     let data = Printf.sprintf "{\"username\": \"%s\", \"password\": \"%s\"}" username password in
@@ -71,12 +71,17 @@ module Auth = struct
       with Not_found -> 5001
 
   let hostname_from_env : string =
-    let hostname = try Sys.getenv "ARANGO_URL" with Not_found -> "localhost" in
+    let hostname = try Sys.getenv "ARANGO_HOST" with Not_found -> "localhost" in
     hostname
 
-  let get_hostname : string =
+  let remove_last_char str =
+    let str_len = String.length str in
+    if str_len = 0 then str else String.sub str 0 (str_len - 1)
+
+  let get_base_url_from_env : string =
     let hostname = hostname_from_env in
-    let hostname = if String.get hostname (String.length hostname - 1) = '/' then hostname else hostname ^ "/" in
+    let hostname = if String.get hostname (String.length hostname - 1) = '/' then remove_last_char hostname else hostname in
+    let port = port_from_env in
+    let hostname = hostname ^ ":" ^ (string_of_int port) in
     hostname
-
 end
