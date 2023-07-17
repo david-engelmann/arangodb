@@ -126,22 +126,13 @@ services:
         user: root
         env_file:
             - .env
-        working_dir: /app
+        #working_dir: /app
         networks:
             - arangodb-net
         ports:
             - "8008:8008"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
-            - type: bind
-              source: .
-              target: /app
-              #- type: bind
-              #source: data/
-              #target: /app/data/
-            - type: bind
-              source: .env
-              target: /app/.env
         command: ["sh", "-c", "ping $ARANGO_HOST:$ARANGO_PORT"]
         privileged: true
         build:
