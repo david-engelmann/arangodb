@@ -119,10 +119,10 @@ services:
         - db3_app:/var/lib/arangodb3-apps
         - _db3:/db3
 
-    arangodb_backend:
+    arangodb:
         restart: always
-        image: arangodb_backend
-        container_name: arangodb_backend
+        image: arangodb
+        container_name: arangodb
         user: root
         env_file:
             - .env
