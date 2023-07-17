@@ -42,6 +42,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Docker
+        run: sh docker/scripts/docker_install.sh
+
+      - name: Docker Compose up
+        run: docker compose -f docker-compose.yml up -d
+
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
         with:
@@ -67,14 +73,14 @@ jobs:
         env:
           ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
-          ARANGO_USERNAME: ${{ secrets.ARANGO_USERNAME }}
+          ARANGO_USER: ${{ secrets.ARANGO_USER }}
           ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
       - name: Dune Test
         run: opam exec -- dune runtest 2>&1 | tee dune_runtest.log
         env:
           ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
-          ARANGO_USERNAME: ${{ secrets.ARANGO_USERNAME }}
+          ARANGO_USER: ${{ secrets.ARANGO_USER }}
           ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
       - name: Upload Log
         uses: actions/upload-artifact@v2

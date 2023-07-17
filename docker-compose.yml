@@ -119,6 +119,51 @@ services:
         - db3_app:/var/lib/arangodb3-apps
         - _db3:/db3
 
+    arangodb:
+        restart: always
+        image: arangodb
+        container_name: arangodb
+        user: root
+        env_file:
+            - .env
+        #working_dir: /app
+        networks:
+            - arangodb-net
+        ports:
+            - "8008:8008"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        command: ["sh", "-c", "ping $ARANGO_HOST:$ARANGO_PORT"]
+        privileged: true
+        build:
+            context: ..
+            dockerfile: docker/Dockerfile
+            args:
+                ARANGO_HOST: "${ARANGO_HOST:-localhost}"
+                ARANGO_PORT: "${ARANGO_PORT:-5001}"
+                ARANGO_USER: "${ARANGO_USER:-root}"
+                ARANGO_PASSWORD: "${ARANGO_PASSWORD:-julyjackson}"
+                ARANGO_ROOT_PASSWORD: "${ARANGO_ROOT_PASSWORD:-julyjackson}"
+
+        links:
+            - "agency:agency"
+            - "coordinator:coordinator"
+            - "coordinator2:coordinator2"
+            - "db1:db1"
+            - "db2:db2"
+            - "db3:db3"
+            - "redis:redis"
+        depends_on:
+            - redis
+            - agency
+            - coordinator
+            - coordinator2
+            - db1
+            - db2
+            - db3
+
+
+
 volumes:
   agency:
   _agency:
