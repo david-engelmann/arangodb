@@ -136,9 +136,9 @@ services:
             - type: bind
               source: .
               target: /app
-            - type: bind
-              source: data/
-              target: /app/data/
+              #- type: bind
+              #source: data/
+              #target: /app/data/
             - type: bind
               source: .env
               target: /app/.env
