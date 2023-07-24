@@ -133,7 +133,7 @@ services:
             - "8008:8008"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
-        command: ["sh", "-c", "ping $ARANGO_HOST:$ARANGO_PORT"]
+        command: ["sh", "-c", "dune build"]
         privileged: true
         build:
             context: ..
