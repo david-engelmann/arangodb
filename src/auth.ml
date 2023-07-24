@@ -65,7 +65,7 @@ module Auth = struct
     let port_from_env : int =
       try
           let port_str = Sys.getenv "ARANGO_PORT" in
-          try 
+          try
               int_of_string port_str
           with Failure _ -> 5001
       with Not_found -> 5001
@@ -84,4 +84,6 @@ module Auth = struct
     let port = port_from_env in
     let hostname = hostname ^ ":" ^ (string_of_int port) in
     hostname
+
+
 end
