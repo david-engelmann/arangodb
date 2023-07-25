@@ -133,13 +133,13 @@ services:
             - "8008:8008"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
-        command: ["sh", "-c", "dune build"]
+        command: ["sh", "-c", "sleep infinity"]
         privileged: true
         build:
             context: ..
             dockerfile: docker/Dockerfile
             args:
-                ARANGO_HOST: "${ARANGO_HOST:-localhost}"
+                ARANGO_HOST: "${ARANGO_HOST:-agency}"
                 ARANGO_PORT: "${ARANGO_PORT:-5001}"
                 ARANGO_USER: "${ARANGO_USER:-root}"
                 ARANGO_PASSWORD: "${ARANGO_PASSWORD:-julyjackson}"
