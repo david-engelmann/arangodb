@@ -19,15 +19,20 @@ module Auth = struct
       password : string;
     }
 
+  let cred_to_string (cred : basic_cred) : string =
+    let cred_data = `Assoc [ ("username", `String cred.username); ("password", `String cred.password)]
+    in
+    Yojson.Basic.to_string cred_data
+
   let create_basic_auth_header (cred : basic_cred) : (string * string) =
     ("authorization", ("Basic " ^ cred.username ^ ":" ^ cred.password))
 
   let create_bearer_auth_header (auth : auth) : (string * string) =
     ("authorization", ("Bearer " ^ auth.token))
 
-  let make_auth_token_request (username : string) (password : string) (base_url : string) : string =
+  let make_auth_token_request (cred : basic_cred) (base_url : string) : string =
     let url = Printf.sprintf "%s/_open/auth" base_url in
-    let data = Printf.sprintf "{\"username\": \"%s\", \"password\": \"%s\"}" username password in
+    let data = cred_to_string cred in
     Printf.printf "url: %s\n" url;
     Printf.printf "data: %s\n" data;
     let body = Lwt_main.run (Cohttp_client.post_data url data) in
