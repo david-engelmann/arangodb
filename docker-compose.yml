@@ -133,7 +133,7 @@ services:
             - "8008:8008"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
-        command: ["sh", "-c", "ping -c agency:5001 && dune build && sleep infinity"]
+        command: ["sh", "-c", "ping -c https://agency:5001 && dune build && sleep infinity"]
         privileged: true
         build:
             context: ..
