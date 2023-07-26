@@ -119,27 +119,33 @@ services:
         - db3_app:/var/lib/arangodb3-apps
         - _db3:/db3
 
-    arangodb:
+    arangodb-dev:
         restart: always
-        image: arangodb
-        container_name: arangodb
+        image: arangodb-dev
+        container_name: arangodb-dev
         user: root
         env_file:
             - .env
-        #working_dir: /app
+        working_dir: /app
         networks:
             - arangodb-net
         ports:
             - "8008:8008"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
-        command: ["sh", "-c", "ping -c https://agency:5001 && dune build && sleep infinity"]
+            - type: bind
+              source: .
+              target: /app
+            - type: bind
+              source: .env
+              target: /app/.env
+        command: ["sh", "-c", "eval $(opam env) && dune test && sleep infinity"]
         privileged: true
         build:
-            context: ..
+            context: .
             dockerfile: docker/Dockerfile
             args:
-                ARANGO_HOST: "${ARANGO_HOST:-agency}"
+                ARANGO_HOST: "${ARANGO_HOST:-0.0.0.0}"
                 ARANGO_PORT: "${ARANGO_PORT:-5001}"
                 ARANGO_USER: "${ARANGO_USER:-root}"
                 ARANGO_PASSWORD: "${ARANGO_PASSWORD:-julyjackson}"

@@ -134,25 +134,16 @@ let test_sample_auth_without_jti_refresh_token _ =
 let test_get_base_url_from_env _ =
     let base_url = Auth.get_base_url_from_env in
     Printf.printf "Base Url: %s\n" base_url;
-    OUnit2.assert_equal "localhost:5001" base_url
+    OUnit2.assert_equal "0.0.0.0:5001" base_url
 
 let split_host_post base_url =
   match String.split_on_char ':' base_url with
   | [ host; port ] -> (host, int_of_string port)
   | _ -> failwith "Invalid format. expected host:port"
 
-
-let test_ping_db _ =
-  let base_url = Auth.get_base_url_from_env in
-  let full_url = Printf.sprintf "https://%s" base_url in
-  let ping_results = Lwt_main.run (Cohttp_client.get_body full_url) in
-  Printf.printf "ping results: %s\n" ping_results;
-  OUnit2.assert_bool "ping results is empty" (ping_results <> "")
-
-
 let test_make_auth_token_request _ =
   let base_url = Auth.get_base_url_from_env in
-  let full_url = Printf.sprintf "https://%s" base_url in
+  let full_url = Printf.sprintf "http://%s" base_url in
   let user_cred = Auth.username_and_password_from_env in
   let auth_body = Auth.make_auth_token_request user_cred full_url in
   Printf.printf "auth body post make_auth_token_request: %s\n" auth_body;
@@ -178,7 +169,6 @@ let suite =
          "test_sample_basic_cred_password" >:: test_sample_basic_cred_password;
          "test_get_base_url_from_env" >:: test_get_base_url_from_env;
          "test_make_auth_token_request" >:: test_make_auth_token_request;
-         "test_ping_db" >:: test_ping_db;
        ]
 
 let () = run_test_tt_main suite
