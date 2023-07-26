@@ -14,11 +14,17 @@ let test_create_session _ =
   | { username; _ } ->
     OUnit2.assert_bool "username is empty" (username <> "")
 
+let test_token_from_session _ =
+  let test_session = create_test_session () in
+  let token = test_session.auth.token in
+  OUnit2.assert_equal ~printer:string_of_bool true ((String.length token) > 0)
+
 
 let suite =
   "suite"
   >::: [
          "test_create_session" >:: test_create_session;
+         "test_token_from_session" >:: test_token_from_session;
        ]
 
 let () = run_test_tt_main suite
