@@ -6,11 +6,9 @@ module Auth = struct
     {
       exp : int;
       iat : int;
-      scope : string;
-      did : string;
-      jti : string option;
+      iss : string;
       token : string;
-      refresh_token : string option;
+      preferred_username : string;
     }
 
   type basic_cred =
@@ -30,6 +28,9 @@ module Auth = struct
   let create_bearer_auth_header (auth : auth) : (string * string) =
     ("authorization", ("Bearer " ^ auth.token))
 
+  let create_basic_cred (username : string) (password : string) : basic_cred =
+    { username; password }
+
   let make_auth_token_request (cred : basic_cred) (base_url : string) : string =
     let url = Printf.sprintf "%s/_open/auth" base_url in
     (*let data = cred_to_string cred in*)
@@ -41,24 +42,15 @@ module Auth = struct
 
   let parse_auth json : auth =
     let open Yojson.Safe.Util in
-    let token = json |> member "accessJwt" |> to_string in
+    let token = json |> member "jwt" |> to_string in
     match unsafe_of_string token with
     | Ok jwt ->
       let claims = jwt.payload in
       let exp = claims |> member "exp" |> to_int in
       let iat = claims |> member "iat" |> to_int in
-      let scope = claims |> member "scope" |> to_string in
-      let did = claims |> member "sub" |> to_string in
-      let jti =
-        try
-          let refresh_jwt = json |> member "refreshJwt" |> to_string in
-          match unsafe_of_string refresh_jwt with
-          | Ok jwt -> Some ( jwt.payload |> member "jti" |> to_string)
-          | Error _ -> None
-        with _ -> None
-      in
-      let refresh_token = try Some (json |> member "refreshJwt" |> to_string) with _ -> None in
-      { exp; iat; scope; did; jti; token; refresh_token }
+      let iss = claims |> member "iss" |> to_string in
+      let preferred_username = claims |> member "preferred_username" |> to_string in
+      { exp; iat; iss; token; preferred_username; }
     | Error _ -> failwith "Invalid JWT token"
 
   let convert_body_to_json (body : string) : Yojson.Safe.t =
