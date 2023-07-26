@@ -40,4 +40,5 @@ RUN opam init && eval $(opam env) && opam update \
 
 COPY . .
 
+RUN chmod +x docker/scripts/docker_install.sh
 RUN docker/scripts/docker_install.sh
