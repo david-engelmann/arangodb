@@ -1,5 +1,4 @@
 open OUnit2
-open Arangodb.Cohttp_client
 open Arangodb.Auth
 
 let sample_basic_cred_defaults : Auth.basic_cred = {

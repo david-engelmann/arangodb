@@ -79,9 +79,11 @@ module Cohttp_client = struct
 
   let post_data (url : string) data =
     let open Lwt.Infix in
-    let headers = Header.init ()
-    |> fun h -> Header.add h "Content-Type" "application/json" in
     let body = Cohttp_lwt.Body.of_string data in
+    let headers = Header.init ()
+    |> fun h -> Header.add h "Content-Type" "application/json"
+    |> fun h -> Header.add h "Content-Length" (string_of_int (String.length data))
+    in
     Client.post ~headers ~body (Uri.of_string url) >>= fun (resp, body) ->
     let code = resp |> Response.status |> Code.code_of_status in
     Printf.printf "Response Code: %d\n" code;

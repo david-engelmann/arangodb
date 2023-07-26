@@ -32,7 +32,8 @@ module Auth = struct
 
   let make_auth_token_request (cred : basic_cred) (base_url : string) : string =
     let url = Printf.sprintf "%s/_open/auth" base_url in
-    let data = cred_to_string cred in
+    (*let data = cred_to_string cred in*)
+    let data = Printf.sprintf "{\"username\":\"%s\",\"password\":\"%s\"}" cred.username cred.password in
     Printf.printf "url: %s\n" url;
     Printf.printf "data: %s\n" data;
     let body = Lwt_main.run (Cohttp_client.post_data url data) in

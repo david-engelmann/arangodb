@@ -31,7 +31,7 @@ RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
 
 RUN apt-get update && apt-get upgrade -y
 
-#USER vim
+#USER opam
 
 RUN opam init && eval $(opam env) && opam update \
     && opam install async base uri cohttp cohttp-lwt-unix cohttp-async httpaf httpaf-lwt-unix lwt core_kernel ssl lwt_ssl jose ounit qcheck dune ocamlformat \
@@ -40,4 +40,3 @@ RUN opam init && eval $(opam env) && opam update \
 
 COPY . .
 
-RUN opam
