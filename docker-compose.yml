@@ -129,12 +129,12 @@ services:
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
             - type: bind
-              source: ${PWD}
+              source: .
               target: /app
             - type: bind
               source: .env
               target: /app/.env
-        command: ["sh", "-c", "docker/scripts/docker_install.sh && eval $(opam env) && docker/scripts/dune_test.sh && sleep infinity"]
+        command: ["sh", "-c", "docker/scripts/docker_install.sh && eval $(opam env) && chmod +x docker/scripts/dune_test.sh && docker/scripts/dune_test.sh && sleep infinity"]
         privileged: true
         build:
             context: .
