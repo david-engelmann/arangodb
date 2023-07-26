@@ -134,7 +134,7 @@ services:
             - type: bind
               source: .env
               target: /app/.env
-        command: ["sh", "-c", "sleep infinity"]
+        command: ["sh", "-c", "eval $(opam env) && dune test && sleep infinity"]
         privileged: true
         build:
             context: .

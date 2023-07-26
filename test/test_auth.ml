@@ -133,7 +133,7 @@ let test_sample_auth_without_jti_refresh_token _ =
 let test_get_base_url_from_env _ =
     let base_url = Auth.get_base_url_from_env in
     Printf.printf "Base Url: %s\n" base_url;
-    OUnit2.assert_equal "0.0.0.0:5001" base_url
+    OUnit2.assert_equal "0.0.0.0:8000" base_url
 
 let split_host_post base_url =
   match String.split_on_char ':' base_url with
