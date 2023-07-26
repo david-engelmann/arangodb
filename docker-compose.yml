@@ -129,7 +129,7 @@ services:
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
             - type: bind
-              source: .
+              source: ${PWD}
               target: /app
             - type: bind
               source: .env
