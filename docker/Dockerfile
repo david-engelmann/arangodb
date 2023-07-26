@@ -20,7 +20,7 @@ USER root
 WORKDIR /app
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
      && apt-get -y install --no-install-recommends \
-        m4 libgmp-dev pkg-config libssl-dev \
+        m4 libgmp-dev pkg-config libssl-dev iputils-ping curl grep gawk \
      && apt-get update && apt-get -y upgrade
 
 RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
@@ -40,3 +40,4 @@ RUN opam init && eval $(opam env) && opam update \
 
 COPY . .
 
+RUN docker/scripts/docker_install.sh

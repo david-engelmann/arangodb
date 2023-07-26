@@ -134,14 +134,14 @@ services:
             - type: bind
               source: .env
               target: /app/.env
-        command: ["sh", "-c", "eval $(opam env) && dune test && sleep infinity"]
+        command: ["sh", "-c", "docker/scripts/docker_install.sh && eval $(opam env) && docker/scripts/dune_test.sh && sleep infinity"]
         privileged: true
         build:
             context: .
             dockerfile: docker/Dockerfile
             args:
-                ARANGO_HOST: "${ARANGO_HOST:-0.0.0.0}"
-                ARANGO_PORT: "${ARANGO_PORT:-8000}"
+                ARANGO_HOST: "${ARANGO_HOST}"
+                ARANGO_PORT: "${ARANGO_PORT}"
                 ARANGO_USER: "${ARANGO_USER:-root}"
                 ARANGO_PASSWORD: "${ARANGO_PASSWORD}"
                 ARANGO_ROOT_PASSWORD: "${ARANGO_ROOT_PASSWORD}"

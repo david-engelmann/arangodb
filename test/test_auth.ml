@@ -130,11 +130,6 @@ let test_sample_auth_without_jti_refresh_token _ =
        | _ ->
          OUnit2.assert_equal 1 1
 
-let test_get_base_url_from_env _ =
-    let base_url = Auth.get_base_url_from_env in
-    Printf.printf "Base Url: %s\n" base_url;
-    OUnit2.assert_equal "0.0.0.0:8000" base_url
-
 let split_host_post base_url =
   match String.split_on_char ':' base_url with
   | [ host; port ] -> (host, int_of_string port)
@@ -166,7 +161,6 @@ let suite =
          "test_sample_basic_cred_defaults" >:: test_sample_basic_cred_defaults;
          "test_sample_basic_cred_username" >:: test_sample_basic_cred_username;
          "test_sample_basic_cred_password" >:: test_sample_basic_cred_password;
-         "test_get_base_url_from_env" >:: test_get_base_url_from_env;
          "test_make_auth_token_request" >:: test_make_auth_token_request;
        ]
 
