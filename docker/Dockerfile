@@ -17,7 +17,6 @@ ARG USER_GID=$USER_UID
 
 USER root
 
-WORKDIR /app
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
      && apt-get -y install --no-install-recommends \
         m4 libgmp-dev pkg-config libssl-dev iputils-ping curl grep gawk \
