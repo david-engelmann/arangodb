@@ -42,13 +42,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Debugging where am i
-        run: pwd
-
-      - name: Debuggin whats there
-        run: ls -al
-
-
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
         with:
@@ -83,8 +76,9 @@ jobs:
 
       - name: Docker Compose up
         run: docker compose -f docker-compose.yml up -d
+
       - name: Dune Test
-        run: opam exec -- dune runtest 2>&1 | tee dune_runtest.log
+        run: chmod +x docker/scripts/dune_test.sh && docker/scripts/dune_test.sh
         env:
           ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
