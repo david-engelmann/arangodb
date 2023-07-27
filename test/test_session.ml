@@ -9,13 +9,13 @@ let create_test_session _ =
   Session.create_session username password
 
 let test_create_session _ =
-  let test_session = create_test_session () in
+  let test_session = create_test_session () |> Session.refresh_session_auth in
   match test_session with
   | { username; _ } ->
     OUnit2.assert_bool "username is empty" (username <> "")
 
 let test_token_from_session _ =
-  let test_session = create_test_session () in
+  let test_session = create_test_session () |> Session.refresh_session_auth in
   let token = test_session.auth.token in
   OUnit2.assert_equal ~printer:string_of_bool true ((String.length token) > 0)
 
