@@ -40,6 +40,15 @@ module Auth = struct
     let body = Lwt_main.run (Cohttp_client.post_data url data) in
     body
 
+  let make_auth_token_refresh (cred : basic_cred) (base_url : string) : string =
+    let url = Printf.sprintf "%s/_admin/server/jwt" base_url in
+    (*let data = cred_to_string cred in*)
+    let data = Printf.sprintf "{\"username\":\"%s\",\"password\":\"%s\"}" cred.username cred.password in
+    Printf.printf "url: %s\n" url;
+    Printf.printf "data: %s\n" data;
+    let body = Lwt_main.run (Cohttp_client.post_data url data) in
+    body
+
   let parse_auth json : auth =
     let open Yojson.Safe.Util in
     let token = json |> member "jwt" |> to_string in
@@ -85,5 +94,10 @@ module Auth = struct
     let hostname = hostname ^ ":" ^ (string_of_int port) in
     hostname
 
+  let is_token_expired (a : auth) : bool =
+    let expired_at = Ptime.of_float_s (float_of_int a.exp) |> Option.get in
+    let expired_at = Ptime.add_span expired_at (Ptime.Span.of_int_s (-1 * 60)) |> Option.get in
+    let datatime_now = Unix.gettimeofday () |> Ptime.of_float_s |> Option.get in
+    Ptime.is_later ~than:expired_at datatime_now
 
 end
