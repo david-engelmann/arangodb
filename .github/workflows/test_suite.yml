@@ -78,7 +78,7 @@ jobs:
         run: docker compose -f docker-compose.yml up -d
 
       - name: Dune Test
-        run: chmod +x docker/scripts/dune_test.sh && docker/scripts/dune_test.sh
+        run: sh docker/scripts/dune_test.sh
         env:
           ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
