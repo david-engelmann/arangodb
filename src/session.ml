@@ -23,6 +23,9 @@ module Session = struct
     let session_auth = body |> Auth.convert_body_to_json |> Auth.parse_auth in
     { username; password; host; auth=session_auth }
 
+  let get_new_session (s : session) : session =
+    create_session s.username s.password
+
   let get_session_request (s : session) : string =
     let host = Auth.get_base_url_from_env in
     let get_session_url = Printf.sprintf "http://%s" host in
@@ -37,12 +40,19 @@ module Session = struct
       let username = s.username in
       let password = s.password in
       let host = s.host in
-      let creds = Auth.create_basic_cred username password in
-      let body = Auth.make_auth_token_refresh creds host in
-      let session_auth = body |> Auth.convert_body_to_json |> Auth.parse_auth in
-      { username; password; host; auth=session_auth }
+      let sesh =
+        try
+          let creds = Auth.create_basic_cred username password in
+          let body = Auth.make_auth_token_refresh creds host in
+          let session_auth = body |> Auth.convert_body_to_json |> Auth.parse_auth in
+          { username; password; host; auth=session_auth }
+        with _ -> get_new_session s
+      in
+      sesh
     else
       s
+
+
 
 
 end
