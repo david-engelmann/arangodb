@@ -38,6 +38,7 @@ services:
 
     coordinator:
         image: arangodb/arangodb
+        restart: always
         container_name: coordinator
         environment:
             - ARANGO_ROOT_PASSWORD=""

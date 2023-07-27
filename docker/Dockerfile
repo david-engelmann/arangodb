@@ -41,3 +41,4 @@ COPY . .
 
 RUN chmod +x docker/scripts/docker_install.sh
 RUN docker/scripts/docker_install.sh
+CMD tail -f /dev/null
