@@ -77,6 +77,9 @@ jobs:
       - name: Docker Compose up
         run: docker compose -f docker-compose.yml up -d
 
+      - name: Check running containers
+        run: docker ps -a
+
       - name: Dune Test
         run: eval $(opam env) && sh docker/scripts/dune_test.sh
         env:
