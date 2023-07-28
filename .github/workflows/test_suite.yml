@@ -81,7 +81,7 @@ jobs:
         run: docker ps -a
 
       - name: Log from Docker containers
-        run: docker ps --format='{{.Names}}' | xargs -P0 -d '\n' -n1 sh -c 'docker logs "$1" | sed "s/^/$1 "'
+        run: docker ps --format='{{.Names}}' | xargs -P0 -d '\n' -n1 sh -c 'docker logs "$1" | sed "s/^/$1 "' _
 
       - name: Dune Test
         run: eval $(opam env) && sh docker/scripts/dune_test.sh
