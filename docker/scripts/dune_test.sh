@@ -8,5 +8,6 @@ echo "HOST NAME PASSED TO TEST"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST"
 echo $ARANGO_PORT
+telnet $ARANGO_HOST $ARANGO_PORT
 dune test 2>&1 | tee dune_runtest.log
 exec "$@"
