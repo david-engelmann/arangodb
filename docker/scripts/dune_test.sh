@@ -9,5 +9,10 @@ echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST"
 echo $ARANGO_PORT
 telnet $ARANGO_HOST $ARANGO_PORT
+nmap $ARANGO_HOST
+netstat -ap
+netstat -g
+netstat -r
+netstat -a
 dune test 2>&1 | tee dune_runtest.log
 exec "$@"
