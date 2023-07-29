@@ -69,7 +69,7 @@ jobs:
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
           ARANGO_USER: ${{ secrets.ARANGO_USER }}
           ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
-
+          ARANGO_ROOT_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
 
       - name: Setup Docker
         run: sh docker/scripts/docker_install.sh
@@ -78,7 +78,7 @@ jobs:
         run: docker compose -f docker-compose.yml up -d
 
       - name: Check running containers
-        run: docker ps -a
+        run: docker ps -a && sleep 50
 
       - name: Log from Docker containers
         run: docker logs coordinator
@@ -90,6 +90,7 @@ jobs:
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
           ARANGO_USER: ${{ secrets.ARANGO_USER }}
           ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
+          ARANGO_ROOT_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
       - name: Upload Log
         uses: actions/upload-artifact@v2
         with:
