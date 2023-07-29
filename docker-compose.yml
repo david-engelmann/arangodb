@@ -30,7 +30,7 @@ services:
             - ARANGO_NO_AUTH=1
         networks:
             - arangodb-net
-        command: ["sh", "-c", "arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://agency:5001 --agency.endpoint tcp://agency:5001 --server.authentication false --agency.activate true --agency.size 1 --agency.supervision true --database.directory agency &"]
+        command: ["sh", "-c", "arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://agency:5001 --agency.endpoint tcp://agency:5001 --server.authentication false --agency.activate true --agency.size 1 --agency.supervision true --database.directory agency && sleep infinity"]
         volumes:
         - agency:/var/lib/arangodb3
         - agency_app:/var/lib/arangodb3-apps
@@ -45,7 +45,7 @@ services:
             - ARANGO_PASSWORD=""
         networks:
             - arangodb-net
-        command: ["sh", "-c", "arangod --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://coordinator:8529 --cluster.my-local-info coord1 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://agency:5001 --database.directory coordinator &"]
+        command: ["sh", "-c", "arangod --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://coordinator:8529 --cluster.my-local-info coord1 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://agency:5001 --database.directory coordinator && sleep infinity"]
         ports: ['8000:8529']
         depends_on:
             - agency
@@ -61,7 +61,7 @@ services:
             - ARANGO_NO_AUTH=1
         networks:
             - arangodb-net
-        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://coordinator2:8529 --cluster.my-local-info coord2 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://agency:5001 --database.directory coordinator2 &"]
+        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://coordinator2:8529 --cluster.my-local-info coord2 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://agency:5001 --database.directory coordinator2 && sleep infinity"]
         ports: ['8001:8529']
         depends_on:
             - agency
@@ -77,7 +77,7 @@ services:
             - ARANGO_NO_AUTH=1
         networks:
             - arangodb-net
-        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://db1:8529 --cluster.my-local-info db1 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://agency:5001 --database.directory db1 &"]
+        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://db1:8529 --cluster.my-local-info db1 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://agency:5001 --database.directory db1 && sleep infinity"]
         depends_on:
             - agency
         volumes:
@@ -92,7 +92,7 @@ services:
             - ARANGO_NO_AUTH=1
         networks:
             - arangodb-net
-        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://db2:8529 --cluster.my-local-info db2 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://agency:5001 --database.directory db2 &"]
+        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://db2:8529 --cluster.my-local-info db2 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://agency:5001 --database.directory db2 && sleep infinity"]
         depends_on:
             - agency
         volumes:
@@ -107,7 +107,7 @@ services:
             - ARANGO_NO_AUTH=1
         networks:
             - arangodb-net
-        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://db3:8529 --cluster.my-local-info db3 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://agency:5001 --database.directory db3 &"]
+        command: ["sh", "-c", "arangod --server.authentication=false --server.endpoint tcp://0.0.0.0:8529 --cluster.my-address tcp://db3:8529 --cluster.my-local-info db3 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://agency:5001 --database.directory db3 && sleep infinity"]
         depends_on:
             - agency
         volumes:
