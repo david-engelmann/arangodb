@@ -13,6 +13,7 @@ echo "HOST NAME PASSED TO TEST 1"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST 1"
 echo $ARANGO_PORT
+ping -c 4 $ARANGO_HOST
 telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
@@ -23,6 +24,7 @@ echo "HOST NAME PASSED TO TEST 3"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST 3"
 echo $ARANGO_PORT
+ping -c 4 $ARANGO_HOST
 telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
@@ -33,6 +35,7 @@ echo "HOST NAME PASSED TO TEST 4"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST 4"
 echo $ARANGO_PORT
+ping -c 4 $ARANGO_HOST
 telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
@@ -43,6 +46,7 @@ echo "HOST NAME PASSED TO TEST 2"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST 2"
 echo $ARANGO_PORT
+ping -c 4 $ARANGO_HOST
 telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
@@ -53,21 +57,33 @@ echo "HOST NAME PASSED TO TEST 2"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST 2"
 echo $ARANGO_PORT
+ping -c 4 $ARANGO_HOST
 telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 echo "------------------------------------------"
 export ARANGO_HOST=$(docker ps | grep "coordinator$" | awk '{ print $1 }')
 export ARANGO_PORT=$(docker ps | grep "coordinator$" | awk '{split($12,a,"->"); print a[1] }' | awk '{split($1,a,":"); print a[2]}' )
-echo "HOST NAME PASSED TO TEST Final"
+echo "HOST NAME PASSED TO TEST b4Final"
 echo $ARANGO_HOST
-echo "HOST PORT PASSED TO TEST Final"
+echo "HOST PORT PASSED TO TEST b4Final"
 echo $ARANGO_PORT
+ping -c 4 $ARANGO_HOST
 telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 docker inspect $ARANGO_HOST
 echo "------------------------------------------"
+export ARANGO_HOST=localhost
+export ARANGO_PORT=8529
+echo "HOST NAME PASSED TO TEST Final"
+echo $ARANGO_HOST
+echo "HOST PORT PASSED TO TEST Final"
+echo $ARANGO_PORT
+ping -c 4 $ARANGO_HOST
+telnet $ARANGO_HOST $ARANGO_PORT
+nmap $ARANGO_HOST
+nslookup $ARANGO_HOST
 netstat -ap
 netstat -g
 netstat -r

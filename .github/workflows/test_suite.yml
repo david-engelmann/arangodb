@@ -80,8 +80,14 @@ jobs:
       - name: Check running containers
         run: docker ps -a && sleep 50
 
-      - name: Log from Docker containers
+      - name: Log from Docker containers - Coord
         run: docker logs coordinator
+
+      - name: Log from Docker containers - Agency
+        run: docker logs agency
+
+      - name: Log from Docker containers - Db
+        run: docker logs db1
 
       - name: Dune Test
         run: eval $(opam env) && sh docker/scripts/dune_test.sh
@@ -97,6 +103,8 @@ jobs:
           name: dune_runtest
           path: dune_runtest.log
 
+      - name: Log from Docker containers
+        run: docker logs coordinator
   lint-doc:
     strategy:
       fail-fast: false
