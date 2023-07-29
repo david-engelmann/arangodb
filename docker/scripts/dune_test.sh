@@ -66,6 +66,7 @@ echo $ARANGO_PORT
 telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
+docker inspect $ARANGO_HOST
 echo "------------------------------------------"
 netstat -ap
 netstat -g
