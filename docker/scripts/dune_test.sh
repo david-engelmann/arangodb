@@ -75,7 +75,7 @@ nslookup $ARANGO_HOST
 docker inspect $ARANGO_HOST
 echo "------------------------------------------"
 export ARANGO_HOST=localhost
-export ARANGO_PORT=8529
+export ARANGO_PORT=8000
 echo "HOST NAME PASSED TO TEST Final"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST Final"
