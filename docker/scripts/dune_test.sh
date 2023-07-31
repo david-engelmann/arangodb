@@ -38,6 +38,6 @@ netstat -r
 netstat -a
 netstat -an
 netstat -tulnp
-
+curl -X POST "http://${ARANGO_HOST}:${ARANGO_PORT}/_open/auth" -H "Content-Type: application/json" -d "{ \"password\": \"\", \"username\": \"root\"}"
 dune test 2>&1 | tee dune_runtest.log
 exec "$@"
