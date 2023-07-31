@@ -24,6 +24,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get install --reinstall -y iptables
 
+RUN dpkg -S /lib/modules/$(uname -r)/kernel/net/ipv4/netfilter/ip_tables.ko
+
+
 RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
     groupmod --gid $USER_GID $USERNAME \
     && usermod --uid $USER_UID --gid $USER_GID $USERNAME \
