@@ -6,7 +6,7 @@ echo "Inspect Docker Networks"
 docker network ls
 echo "Inspect arangodb-net"
 docker inspect arangodb-net
-dokcer network inspect arangodb-net
+docker network inspect arangodb-net
 docker network inspect webservers -f '{{ range.Containers}}{{.IPv4Address}}{{end}}'
 docker inspect webservers --format='{{range.Containers}} {{.IPv4Address}}{{":"}}{{.Name}} {{end}}'
 echo "------------------------------------------"
