@@ -34,6 +34,11 @@ let test_token_header_from_session_header _ =
   | (_, header) ->
     OUnit2.assert_bool "Token Header is doesn't contain Bearer" (String.is_substring header ~substring:"Bearer")
 
+let test_get_session_request _ =
+  let test_session = create_test_session () |> Session.refresh_session_auth in
+  let test_session_response = Session.get_session_request test_session in
+  Printf.printf "get_session_request response %s\n" test_session_response;
+  OUnit2.assert_bool "Get Session Request Response is empty" (test_session_response <> "")
 
 let suite =
   "suite"
@@ -41,6 +46,7 @@ let suite =
          "test_create_session" >:: test_create_session;
          "test_token_from_session" >:: test_token_from_session;
          "test_token_header_from_session_header" >:: test_token_header_from_session_header;
+         "test_get_session_request" >:: test_get_session_request;
        ]
 
 let () = run_test_tt_main suite

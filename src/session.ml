@@ -17,7 +17,6 @@ module Session = struct
   let create_session (username : string) (password : string) : session =
     let host = Auth.get_base_url_from_env in
     let host = Printf.sprintf "http://%s" host in
-    Printf.printf "host from create_session: %s\n" host;
     let creds = Auth.create_basic_cred username password in
     let body = Auth.make_auth_token_request creds host in
     let session_auth = body |> Auth.convert_body_to_json |> Auth.parse_auth in
@@ -28,7 +27,8 @@ module Session = struct
 
   let get_session_request (s : session) : string =
     let host = Auth.get_base_url_from_env in
-    let get_session_url = Printf.sprintf "http://%s" host in
+    let get_session_url = Printf.sprintf "http://%s/_admin/server/jwt" host in
+    Printf.printf "host from get_session_request: %s\n" get_session_url;
     let token_header = token_header_from_session s in
     let application_json = Cohttp_client.application_json_setting_tuple in
     let headers = Cohttp_client.create_headers_from_pairs [application_json; token_header] in
