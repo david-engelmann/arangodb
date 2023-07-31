@@ -4,8 +4,6 @@ networks:
     arangodb-net:
         name: arangodb-net
         driver: bridge
-        ipam:
-            driver: default
 
 services:
     redis:
