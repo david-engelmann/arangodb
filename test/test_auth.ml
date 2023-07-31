@@ -72,6 +72,18 @@ let test_make_auth_token_request _ =
   Printf.printf "auth body post make_auth_token_request: %s\n" auth_body;
   OUnit2.assert_bool "auth_body is empty" (auth_body <> "")
 
+let test_parse_auth _ =
+  let base_url = Auth.get_base_url_from_env in
+  let full_url = Printf.sprintf "http://%s" base_url in
+  let user_cred = Auth.username_and_password_from_env in
+  let body = Auth.make_auth_token_request user_cred full_url in
+  let test_auth = Auth.parse_auth (Auth.convert_body_to_json body) in
+  OUnit2.assert_equal ~printer:string_of_bool true (test_auth.exp > 0);
+  OUnit2.assert_equal ~printer:string_of_bool true (test_auth.iat > 0);
+  OUnit2.assert_equal ~printer:string_of_bool true ((String.length test_auth.iss) > 0);
+  OUnit2.assert_equal ~printer:string_of_bool true ((String.length test_auth.token) > 0);
+  OUnit2.assert_equal ~printer:string_of_bool true ((String.length test_auth.preferred_username) > 0)
+
 let suite =
   "suite"
   >::: [
@@ -84,6 +96,7 @@ let suite =
          "test_sample_basic_cred_username" >:: test_sample_basic_cred_username;
          "test_sample_basic_cred_password" >:: test_sample_basic_cred_password;
          "test_make_auth_token_request" >:: test_make_auth_token_request;
+         "test_parse_auth" >:: test_parse_auth;
        ]
 
 let () = run_test_tt_main suite
