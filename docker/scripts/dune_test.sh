@@ -7,8 +7,8 @@ docker network ls
 echo "Inspect arangodb-net"
 docker inspect arangodb-net
 docker network inspect arangodb-net
-docker network inspect webservers -f '{{ range.Containers}}{{.IPv4Address}}{{end}}'
-docker inspect webservers --format='{{range.Containers}} {{.IPv4Address}}{{":"}}{{.Name}} {{end}}'
+docker network inspect arangodb-net -f '{{ range.Containers}}{{.IPv4Address}}{{end}}'
+docker inspect arangodb-net --format='{{range.Containers}} {{.IPv4Address}}{{":"}}{{.Name}} {{end}}'
 echo "------------------------------------------"
 export ARANGO_HOST=$(docker ps | grep "coordinator$" | awk '{ print $1 }')
 export ARANGO_PORT=$(docker ps | grep "coordinator$" | awk '{split($12,a,"->"); print a[1] }' | awk '{split($1,a,":"); print a[2]}' )
