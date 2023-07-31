@@ -7,7 +7,7 @@ echo "Inspect Bridge"
 docker inspect bridge
 echo "Inspect arangodb-net"
 docker inspect arangodb-net
-export ARANGO_HOST=172.18.0.0
+export ARANGO_HOST=127.0.0.11
 export ARANGO_PORT=8000
 echo "HOST NAME PASSED TO TEST 1"
 echo $ARANGO_HOST
@@ -18,7 +18,7 @@ telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 echo "------------------------------------------"
-export ARANGO_HOST=0.0.0.0
+export ARANGO_HOST=127.0.0.11
 export ARANGO_PORT=43849
 echo "HOST NAME PASSED TO TEST 3"
 echo $ARANGO_HOST
@@ -29,7 +29,7 @@ telnet $ARANGO_HOST $ARANGO_PORT
 nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 echo "------------------------------------------"
-export ARANGO_HOST=0.0.0.0
+export ARANGO_HOST=127.0.0.11
 export ARANGO_PORT=49760
 echo "HOST NAME PASSED TO TEST 4"
 echo $ARANGO_HOST
@@ -52,7 +52,7 @@ nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 echo "------------------------------------------"
 export ARANGO_HOST=127.0.0.11
-export ARANGO_PORT=49760
+export ARANGO_PORT=5000
 echo "HOST NAME PASSED TO TEST 2"
 echo $ARANGO_HOST
 echo "HOST PORT PASSED TO TEST 2"
@@ -74,7 +74,7 @@ nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 docker inspect $ARANGO_HOST
 echo "------------------------------------------"
-export ARANGO_HOST=172.19.0.5
+export ARANGO_HOST=127.0.0.11
 export ARANGO_PORT=8000
 echo "HOST NAME PASSED TO TEST Final"
 echo $ARANGO_HOST
@@ -90,5 +90,6 @@ netstat -r
 netstat -a
 netstat -an
 netstat -tulnp
+iptables -L
 dune test 2>&1 | tee dune_runtest.log
 exec "$@"
