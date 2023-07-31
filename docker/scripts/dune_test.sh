@@ -35,6 +35,7 @@ netstat -r
 netstat -a
 netstat -an
 netstat -tulnp
+update-alternatives --set iptables /usr/sbin/iptables-legacy
 iptables -L
 dune test 2>&1 | tee dune_runtest.log
 exec "$@"
