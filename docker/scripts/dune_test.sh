@@ -21,7 +21,7 @@ nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 docker container inspect $ARANGO_HOST
 echo "------------------------------------------"
-export ARANGO_HOST=$(docker inspect arangodb-net --format='{{range.Containers}} {{.IPv4Address}}{{":"}}{{.Name}} {{end}}' | grep "coordinator$" | awk '{split($1,a,":"); print a[1]}' )
+export ARANGO_HOST=$(docker inspect arangodb-net --format='{{range.Containers}} {{.IPv4Address}}{{":"}}{{.Name}} {{end}}' | tr ' ' '\n' | grep -E "coordinator$" | cut -d ':' -f 1 | cut -d '/' -f 1 )
 export ARANGO_PORT=8000
 echo "HOST NAME PASSED TO TEST Final"
 echo $ARANGO_HOST
