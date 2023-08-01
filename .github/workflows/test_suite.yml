@@ -42,12 +42,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Docker
-        run: sh docker/scripts/docker_install.sh
-
-      - name: Docker Compose up
-        run: docker compose -f docker-compose.yml up -d
-
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
         with:
@@ -75,19 +69,42 @@ jobs:
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
           ARANGO_USER: ${{ secrets.ARANGO_USER }}
           ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
+          ARANGO_ROOT_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
+
+      - name: Setup Docker
+        run: sh docker/scripts/docker_install.sh
+
+      - name: Docker Compose up
+        run: docker compose -f docker-compose.yml up -d
+
+      - name: Check running containers
+        run: docker ps -a && sleep 50
+
+      - name: Log from Docker containers - Coord
+        run: docker logs coordinator
+
+      - name: Log from Docker containers - Agency
+        run: docker logs agency
+
+      - name: Log from Docker containers - Db
+        run: docker logs db1
+
       - name: Dune Test
-        run: opam exec -- dune runtest 2>&1 | tee dune_runtest.log
+        run: eval $(opam env) && sh docker/scripts/dune_test.sh
         env:
           ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
           ARANGO_PORT: ${{ secrets.ARANGO_PORT }}
           ARANGO_USER: ${{ secrets.ARANGO_USER }}
           ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
+          ARANGO_ROOT_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
       - name: Upload Log
         uses: actions/upload-artifact@v2
         with:
           name: dune_runtest
           path: dune_runtest.log
 
+      - name: Log from Docker containers
+        run: docker logs coordinator
   lint-doc:
     strategy:
       fail-fast: false

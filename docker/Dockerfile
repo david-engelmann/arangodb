@@ -9,7 +9,7 @@
 #
 #
 #ENV PATH=~/.opam/
-FROM ocaml/opam
+FROM ocaml/opam:debian
 
 ARG USERNAME=vim
 ARG USER_UID=1000
@@ -17,11 +17,11 @@ ARG USER_GID=$USER_UID
 
 USER root
 
-
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
      && apt-get -y install --no-install-recommends \
-        m4 \
+        m4 libgmp-dev pkg-config libssl-dev iputils-ping curl telnet net-tools nmap grep gawk dnsutils \
      && apt-get update && apt-get -y upgrade
+
 
 RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
     groupmod --gid $USER_GID $USERNAME \
@@ -29,8 +29,17 @@ RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
     && chown -R $USER_UID:$USER_GID /home/$USERNAME; \
     fi
 
-USER opam
+RUN apt-get update && apt-get upgrade -y
 
-RUN opam update \
-    && opam install async base uri cohttp cohttp-lwt-unix cohttp-async httpaf httpaf-lwt-unix lwt core_kernel ssl lwt_ssl jose ounit qcheck dune ocamlformat
+#USER opam
 
+RUN opam init && eval $(opam env) && opam update \
+    && opam install async base uri cohttp cohttp-lwt-unix cohttp-async httpaf httpaf-lwt-unix lwt core_kernel ssl lwt_ssl jose ounit qcheck dune ocamlformat \
+    && eval $(opam env)
+
+
+COPY . .
+
+RUN chmod +x docker/scripts/docker_install.sh
+RUN docker/scripts/docker_install.sh
+CMD tail -f /dev/null

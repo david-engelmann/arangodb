@@ -3,5 +3,5 @@
  (name arangodb)
  (libraries async core uri cohttp cohttp-lwt-unix cohttp-async httpaf httpaf-lwt-unix ssl jose lwt_ssl lwt)
  (preprocess (pps ppx_jane))
- (modules Auth Config Cohttp_client Request)
+ (modules Auth Config Cohttp_client Request Session)
 )

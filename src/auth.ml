@@ -6,11 +6,9 @@ module Auth = struct
     {
       exp : int;
       iat : int;
-      scope : string;
-      did : string;
-      jti : string option;
+      iss : string;
       token : string;
-      refresh_token : string option;
+      preferred_username : string;
     }
 
   type basic_cred =
@@ -19,38 +17,49 @@ module Auth = struct
       password : string;
     }
 
+  let cred_to_string (cred : basic_cred) : string =
+    let cred_data = `Assoc [ ("username", `String cred.username); ("password", `String cred.password)]
+    in
+    Yojson.Basic.to_string cred_data
+
   let create_basic_auth_header (cred : basic_cred) : (string * string) =
     ("authorization", ("Basic " ^ cred.username ^ ":" ^ cred.password))
 
   let create_bearer_auth_header (auth : auth) : (string * string) =
     ("authorization", ("Bearer " ^ auth.token))
 
-  let make_auth_token_request (username : string) (password : string) (base_url : string) : string =
+  let create_basic_cred (username : string) (password : string) : basic_cred =
+    { username; password }
+
+  let make_auth_token_request (cred : basic_cred) (base_url : string) : string =
     let url = Printf.sprintf "%s/_open/auth" base_url in
-    let data = Printf.sprintf "{\"username\": \"%s\", \"password\": \"%s\"}" username password in
+    (*let data = cred_to_string cred in*)
+    let data = Printf.sprintf "{\"username\":\"%s\",\"password\":\"%s\"}" cred.username cred.password in
+    Printf.printf "url: %s\n" url;
+    Printf.printf "data: %s\n" data;
+    let body = Lwt_main.run (Cohttp_client.post_data url data) in
+    body
+
+  let make_auth_token_refresh (cred : basic_cred) (base_url : string) : string =
+    let url = Printf.sprintf "%s/_admin/server/jwt" base_url in
+    (*let data = cred_to_string cred in*)
+    let data = Printf.sprintf "{\"username\":\"%s\",\"password\":\"%s\"}" cred.username cred.password in
+    Printf.printf "url: %s\n" url;
+    Printf.printf "data: %s\n" data;
     let body = Lwt_main.run (Cohttp_client.post_data url data) in
     body
 
   let parse_auth json : auth =
     let open Yojson.Safe.Util in
-    let token = json |> member "accessJwt" |> to_string in
+    let token = json |> member "jwt" |> to_string in
     match unsafe_of_string token with
     | Ok jwt ->
       let claims = jwt.payload in
       let exp = claims |> member "exp" |> to_int in
       let iat = claims |> member "iat" |> to_int in
-      let scope = claims |> member "scope" |> to_string in
-      let did = claims |> member "sub" |> to_string in
-      let jti =
-        try
-          let refresh_jwt = json |> member "refreshJwt" |> to_string in
-          match unsafe_of_string refresh_jwt with
-          | Ok jwt -> Some ( jwt.payload |> member "jti" |> to_string)
-          | Error _ -> None
-        with _ -> None
-      in
-      let refresh_token = try Some (json |> member "refreshJwt" |> to_string) with _ -> None in
-      { exp; iat; scope; did; jti; token; refresh_token }
+      let iss = claims |> member "iss" |> to_string in
+      let preferred_username = claims |> member "preferred_username" |> to_string in
+      { exp; iat; iss; token; preferred_username; }
     | Error _ -> failwith "Invalid JWT token"
 
   let convert_body_to_json (body : string) : Yojson.Safe.t =
@@ -65,10 +74,10 @@ module Auth = struct
     let port_from_env : int =
       try
           let port_str = Sys.getenv "ARANGO_PORT" in
-          try 
+          try
               int_of_string port_str
-          with Failure _ -> 5001
-      with Not_found -> 5001
+          with Failure _ -> 8000
+      with Not_found -> 8000
 
   let hostname_from_env : string =
     let hostname = try Sys.getenv "ARANGO_HOST" with Not_found -> "localhost" in
@@ -84,4 +93,11 @@ module Auth = struct
     let port = port_from_env in
     let hostname = hostname ^ ":" ^ (string_of_int port) in
     hostname
+
+  let is_token_expired (a : auth) : bool =
+    let expired_at = Ptime.of_float_s (float_of_int a.exp) |> Option.get in
+    let expired_at = Ptime.add_span expired_at (Ptime.Span.of_int_s (-1 * 60)) |> Option.get in
+    let datatime_now = Unix.gettimeofday () |> Ptime.of_float_s |> Option.get in
+    Ptime.is_later ~than:expired_at datatime_now
+
 end
