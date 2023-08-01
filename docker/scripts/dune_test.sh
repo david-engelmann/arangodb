@@ -8,7 +8,6 @@ echo "Inspect arangodb-net"
 docker inspect arangodb-net
 docker network inspect arangodb-net
 docker network inspect arangodb-net -f '{{ range.Containers}}{{.IPv4Address}}{{end}}'
-docker inspect arangodb-net --format='{{range.Containers}} {{.IPv4Address}}{{":"}}{{.Name}} {{end}}'
 echo "------------------------------------------"
 export ARANGO_HOST=$(docker ps | grep "coordinator$" | awk '{ print $1 }')
 export ARANGO_PORT=$(docker ps | grep "coordinator$" | awk '{split($12,a,"->"); print a[1] }' | awk '{split($1,a,":"); print a[2]}' )
@@ -22,7 +21,7 @@ nmap $ARANGO_HOST
 nslookup $ARANGO_HOST
 docker container inspect $ARANGO_HOST
 echo "------------------------------------------"
-export ARANGO_HOST=127.0.0.11
+export ARANGO_HOST=$(docker inspect arangodb-net --format='{{range.Containers}} {{.IPv4Address}}{{":"}}{{.Name}} {{end}}' | grep "coordinator$" | awk '{split($1,a,":"); print a[1]}' )
 export ARANGO_PORT=8000
 echo "HOST NAME PASSED TO TEST Final"
 echo $ARANGO_HOST
@@ -39,5 +38,10 @@ netstat -a
 netstat -an
 netstat -tulnp
 curl -X POST "http://${ARANGO_HOST}:${ARANGO_PORT}/_open/auth" -H "Content-Type: application/json" -d "{ \"password\": \"\", \"username\": \"root\"}"
+curl -X POST "http://${ARANGO_HOST}:80/_open/auth" -H "Content-Type: application/json" -d "{ \"password\": \"\", \"username\": \"root\"}"
+curl -X POST "http://${ARANGO_HOST}:8529/_open/auth" -H "Content-Type: application/json" -d "{ \"password\": \"\", \"username\": \"root\"}"
+curl -X POST "http://${ARANGO_HOST}/_open/auth" -H "Content-Type: application/json" -d "{ \"password\": \"\", \"username\": \"root\"}"
+curl -X POST "http://coordinator/_open/auth" -H "Content-Type: application/json" -d "{ \"password\": \"\", \"username\": \"root\"}"
+curl -X POST "coordinator/_open/auth" -H "Content-Type: application/json" -d "{ \"password\": \"\", \"username\": \"root\"}"
 dune test 2>&1 | tee dune_runtest.log
 exec "$@"
